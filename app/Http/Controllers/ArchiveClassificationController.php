@@ -15,7 +15,7 @@ class ArchiveClassificationController extends Controller
      */
     public function index()
     {
-        //
+        return view('pages.reference.archive-classification.index');
     }
 
     /**
@@ -25,7 +25,7 @@ class ArchiveClassificationController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.reference.archive-classification.create');
     }
 
     /**

@@ -95,6 +95,12 @@
                     <div data-i18n="{{ __('menu.reference.menu') }}">{{ __('menu.reference.menu') }}</div>
                 </a>
                 <ul class="menu-sub">
+                    <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.archive-classifications.*') ? 'active' : '' }}">
+                        <a href="{{ route('reference.archive-classifications.index') }}" class="menu-link">
+                            <div
+                                data-i18n="{{ __('menu.reference.archive-classifications') }}">{{ __('menu.reference.archive-classifications') }}</div>
+                        </a>
+                    </li>
                     <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.classification.*') ? 'active' : '' }}">
                         <a href="{{ route('reference.classification.index') }}" class="menu-link">
                             <div

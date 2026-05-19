@@ -28,6 +28,7 @@ return [
         'menu' => 'Reference',
         'classification' => 'Classification',
         'status' => 'Status',
+        'archive-classifications' => 'Archive Classifications',
     ],
     'header' => [
         'main_menu' => 'Main',

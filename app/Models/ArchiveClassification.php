@@ -24,6 +24,11 @@ class ArchiveClassification extends Model
         'is_active' => 'boolean',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'uuid';
+    }
+
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
