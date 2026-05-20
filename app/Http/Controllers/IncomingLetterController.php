@@ -6,6 +6,7 @@ use App\Enums\LetterType;
 use App\Http\Requests\StoreLetterRequest;
 use App\Http\Requests\UpdateLetterRequest;
 use App\Models\Attachment;
+use App\Models\ArchiveClassification;
 use App\Models\Classification;
 use App\Models\Config;
 use App\Models\Letter;
@@ -89,7 +90,6 @@ class IncomingLetterController extends Controller
      */
     public function store(StoreLetterRequest $request): RedirectResponse
     {
-        dd($request->all());
         try {
             $user = auth()->user();
 
@@ -101,9 +101,11 @@ class IncomingLetterController extends Controller
             $newLetter['user_id'] = $user->id;
 
             // get counter for the current year of classification code
-            $counter = Letter::where('code', $request->classification)->first();
-            $counter->counter += 1;
-            $counter->save();
+            $counter = Letter::where('year', date('Y'))->count();
+            $counter += 1;
+
+            $sequenceNumber = str_pad((string)$counter, 3, '0', STR_PAD_LEFT);
+            $newLetter['reference_number'] = str_replace('[XXX]', $sequenceNumber, $newLetter['reference_number']);
 
             $letter = Letter::create($newLetter);
 
@@ -116,6 +118,7 @@ class IncomingLetterController extends Controller
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
                     $attachment->storeAs('public/attachments', $filename);
+
                     Attachment::create([
                         'filename' => $filename,
                         'extension' => $extension,
@@ -154,9 +157,26 @@ class IncomingLetterController extends Controller
      */
     public function edit(Letter $incoming): View
     {
+        $classification = ArchiveClassification::query()
+            ->where('full_code', $incoming->classification_code)
+            ->first();
+
+        $selectedClassifications = [];
+
+        while ($classification) {
+            array_unshift($selectedClassifications, [
+                'id' => $classification->id,
+                'code' => $classification->code,
+                'name' => $classification->name,
+                'parent_id' => $classification->parent_id,
+            ]);
+
+            $classification = $classification->parent;
+        }
+
         return view('pages.transaction.incoming.edit', [
             'data' => $incoming,
-            'classifications' => Classification::all(),
+            'selectedClassifications' => $selectedClassifications,
         ]);
     }
 
