@@ -47,8 +47,7 @@
 
     <!-- Core CSS -->
     <link rel="stylesheet" class="template-customizer-core-css" href="{{asset('sneat/vendor/css/core.css')}}"/>
-    <link rel="stylesheet" class="template-customizer-theme-css"
-          href="{{asset('sneat/vendor/css/theme-default.css')}}"/>
+    <link rel="stylesheet" class="template-customizer-theme-css" href="{{asset('sneat/vendor/css/theme-default.css')}}"/>
     <link rel="stylesheet" href="{{asset('sneat/css/demo.css')}}"/>
 
     <!-- Vendors CSS -->

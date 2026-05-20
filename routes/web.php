@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('reference')->as('reference.')->middleware(['role:admin'])->group(function () {
+        Route::get('archive-classifications/children/{id?}', [\App\Http\Controllers\ArchiveClassificationController::class, 'children'])->name('archive-classifications.children');
         Route::resource('archive-classifications', \App\Http\Controllers\ArchiveClassificationController::class);
         Route::resource('classification', \App\Http\Controllers\ClassificationController::class)->except(['show', 'create', 'edit']);
         Route::resource('status', \App\Http\Controllers\LetterStatusController::class)->except(['show', 'create', 'edit']);

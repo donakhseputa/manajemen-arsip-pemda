@@ -32,6 +32,12 @@ return [
         'type' => 'Type',
         'description' => 'Description',
     ],
+    'archive_classification' => [
+        'code' => 'Code',
+        'name' => 'Name',
+        'type' => 'Type',
+        'description' => 'Description',
+    ],
     'status' => [
         'status' => 'Status',
     ],

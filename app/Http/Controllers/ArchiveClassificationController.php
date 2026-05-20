@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\DataTables\ArchiveClassificationsDataTable;
 use App\Models\ArchiveClassification;
 use App\Http\Requests\StoreArchiveClassificationRequest;
 use App\Http\Requests\UpdateArchiveClassificationRequest;
+use Illuminate\Http\JsonResponse;
 
 class ArchiveClassificationController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ArchiveClassificationsDataTable $dataTable)
     {
-        return view('pages.reference.archive-classification.index');
+        return $dataTable->render('pages.reference.archive-classification.index');
     }
 
     /**
@@ -82,5 +82,28 @@ class ArchiveClassificationController extends Controller
     public function destroy(ArchiveClassification $archiveClassification)
     {
         //
+    }
+
+    public function children(?int $id = null): JsonResponse
+    {
+        $query = ArchiveClassification::query();
+
+        if ($id) {
+            $query->where('parent_id', $id);
+        } else {
+            $query->whereNull('parent_id');
+        }
+
+        $classifications = $query
+            ->orderBy('code')
+            ->get([
+                'id',
+                'code',
+                'name',
+                'parent_id',
+                'level',
+            ]);
+
+        return response()->json($classifications);
     }
 }

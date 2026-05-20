@@ -12,18 +12,16 @@
         </button>
     </x-breadcrumb>
 
-    <div class="card mb-5">
-        <div class="table-responsive text-nowrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>{{ __('model.archive_classification.code') }}</th>
-                        <th>{{ __('model.archive_classification.name') }}</th>
-                        <th>{{ __('model.archive_classification.description') }}</th>
-                        <th>{{ __('menu.general.action') }}</th>
-                    </tr>
-                </thead>
-            </table>
+    <div class="card">
+        <div class="card-datatable text-nowrap">
+            <div class="table-responsive text-nowrap">
+                {{ $dataTable->table() }}
+            </div>
         </div>
     </div>
 @endsection
+
+@push('script')
+    <script src="{{ asset('sneat/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+    {{ $dataTable->scripts() }}
+@endpush

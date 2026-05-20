@@ -32,6 +32,12 @@ return [
         'type' => 'Klasifikasi',
         'description' => 'Uraian',
     ],
+    'archive_classification' => [
+        'code' => 'Kode',
+        'name' => 'Nama',
+        'type' => 'Klasifikasi',
+        'description' => 'Uraian',
+    ],
     'status' => [
         'status' => 'Sifat Status',
     ],
