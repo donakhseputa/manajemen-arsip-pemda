@@ -6,11 +6,14 @@
     </x-breadcrumb>
 
     <div class="card mb-4">
+        @include('layout.partials.alert')
+
         <form action="{{ route('transaction.incoming.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="card-body row">
                 <input type="hidden" name="type" value="incoming">
+                <input type="hidden" name="classification_code" id="classification_code_input">
 
                 {{-- Classification Level 1 --}}
                 <div class="col-sm-12 col-md-6 col-lg-3">
@@ -214,11 +217,15 @@
                     const currentSelect = $(this);
                     const selectedId = currentSelect.val();
                     const childSelector = currentSelect.data("child");
+                    const selectedOption = currentSelect.find("option:selected");
+                    const hasChildren = selectedOption.data("has-children");
 
                     resetChildren(currentSelect.attr("id"));
 
-                    if (selectedId && childSelector) {
+                    if (selectedId && childSelector && hasChildren) {
                         loadChildren(selectedId, childSelector);
+                        $("#reference_number").val("");
+                        return;
                     }
 
                     generateReferenceNumber();
@@ -254,7 +261,6 @@
                 const select = $(selector);
 
                 select.empty();
-
                 select.append(`
                     <option value="">
                         Select Classification
@@ -265,14 +271,14 @@
                     select.append(`
                         <option
                             value="${item.id}"
-                            data-code="${item.code}">
+                            data-code="${item.code}"
+                            data-has-children="${item.has_children}">
                             ${item.code} - ${item.name}
                         </option>
                     `);
                 });
 
                 select.prop("disabled", false);
-
                 select.trigger("change.select2");
             }
 
@@ -303,34 +309,31 @@
             }
 
             function generateReferenceNumber() {
-                const level1 = $("#classification_level_1 option:selected").data("code");
-                const level2 = $("#classification_level_2 option:selected").data("code");
-                const level3 = $("#classification_level_3 option:selected").data("code");
-                const level4 = $("#classification_level_4 option:selected").data("code");
+                const codes = [];
 
-                if (!level1 || !level2 || !level3 || !level4) {
+                $(".classification-select").each(function () {
+                    const code = $(this)
+                        .find("option:selected")
+                        .data("code");
+
+                    if (code !== undefined && code !== null && code !== "") {
+                        codes.push(code);
+                    }
+                });
+
+                if (codes.length === 0) {
                     $("#reference_number").val("");
 
                     return;
                 }
 
-                const classificationCode = [
-                    level1,
-                    level2,
-                    level3,
-                    level4,
-                ].join(".");
-
-                const sequence = "001";
-
-                const monthRoman = getRomanMonth(
-                    new Date().getMonth() + 1
-                );
-
+                const classificationCode = codes.join(".");
+                const sequence = "[XXX]";
+                const monthRoman = getRomanMonth(new Date().getMonth() + 1);
                 const year = new Date().getFullYear();
-
                 const referenceNumber = `${classificationCode}/${sequence}/UM-KESRA/RPA/${monthRoman}/${year}`;
 
+                $("#classification_code_input").val(classificationCode);
                 $("#reference_number").val(referenceNumber);
             }
 

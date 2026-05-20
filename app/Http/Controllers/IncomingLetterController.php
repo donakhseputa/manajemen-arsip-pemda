@@ -89,17 +89,30 @@ class IncomingLetterController extends Controller
      */
     public function store(StoreLetterRequest $request): RedirectResponse
     {
+        dd($request->all());
         try {
             $user = auth()->user();
 
-            if ($request->type != LetterType::INCOMING->type()) throw new \Exception(__('menu.transaction.incoming_letter'));
+            if ($request->type != LetterType::INCOMING->type()) {
+                throw new \Exception(__('menu.transaction.incoming_letter'));
+            }
+
             $newLetter = $request->validated();
             $newLetter['user_id'] = $user->id;
+
+            // get counter for the current year of classification code
+            $counter = Letter::where('code', $request->classification)->first();
+            $counter->counter += 1;
+            $counter->save();
+
             $letter = Letter::create($newLetter);
+
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
-                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
+
+                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) { continue; }
+
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
                     $attachment->storeAs('public/attachments', $filename);
@@ -111,6 +124,7 @@ class IncomingLetterController extends Controller
                     ]);
                 }
             }
+
             return redirect()
                 ->route('transaction.incoming.index')
                 ->with('success', __('menu.general.success'));

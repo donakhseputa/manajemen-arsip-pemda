@@ -102,7 +102,17 @@ class ArchiveClassificationController extends Controller
                 'name',
                 'parent_id',
                 'level',
-            ]);
+            ])
+            ->map(function ($classification) {
+                return [
+                    'id' => $classification->id,
+                    'code' => $classification->code,
+                    'name' => $classification->name,
+                    'has_children' => ArchiveClassification::query()
+                        ->where('parent_id', $classification->id)
+                        ->exists(),
+                ];
+            });
 
         return response()->json($classifications);
     }

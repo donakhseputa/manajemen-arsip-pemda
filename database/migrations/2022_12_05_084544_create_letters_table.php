@@ -1,11 +1,25 @@
 <?php
 
+use App\Models\ArchiveClassification;
+use App\Models\Letter;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    protected string $archiveClassification;
+    protected string $letter;
+    protected string $user;
+
+    public function __construct()
+    {
+        $this->archiveClassification = (new ArchiveClassification())->getTable();
+        $this->letter = (new Letter())->getTable();
+        $this->user = (new User())->getTable();
+    }
+
     /**
      * Run the migrations.
      *
@@ -13,7 +27,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('letters', function (Blueprint $table) {
+        Schema::create($this->letter, function (Blueprint $table) {
             $table->id();
             $table->string('reference_number')->unique()->comment('Nomor Surat');
             $table->string('agenda_number');
@@ -23,10 +37,11 @@ return new class extends Migration
             $table->date('received_date')->nullable();
             $table->text('description')->nullable();
             $table->text('note')->nullable();
+            $table->year('year')->nullable();
             $table->string('type')->default('incoming')->comment('Surat Masuk (incoming)/Surat Keluar (outgoing)');
             $table->string('classification_code');
-            $table->foreign('classification_code')->references('code')->on('classifications');
-            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate();
+            $table->foreign('classification_code')->references('full_code')->on($this->archiveClassification);
+            $table->foreignId('user_id')->constrained($this->user)->cascadeOnUpdate();
             $table->timestamps();
         });
     }
@@ -38,6 +53,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('letters');
+        Schema::dropIfExists($this->letter);
     }
 };
