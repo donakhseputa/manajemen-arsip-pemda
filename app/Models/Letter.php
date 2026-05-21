@@ -104,7 +104,7 @@ class Letter extends Model
         return $query
             ->with(['attachments', 'classification'])
             ->search($search)
-            ->latest('letter_date')
+            ->latest('created_at')
             ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
             ->appends([
                 'search' => $search,

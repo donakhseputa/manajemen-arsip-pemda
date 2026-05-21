@@ -18,6 +18,10 @@ return [
             'not_disposed' => 'Not Disposed',
         ],
         'classification_code' => 'Classification Code',
+        'classification_level_1' => 'Classification Level 1',
+        'classification_level_2' => 'Classification Level 2',
+        'classification_level_3' => 'Classification Level 3',
+        'classification_level_4' => 'Classification Level 4',
     ],
     'disposition' => [
         'to' => 'Receiver',

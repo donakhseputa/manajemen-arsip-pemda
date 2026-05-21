@@ -6,6 +6,7 @@ use App\Enums\LetterType;
 use App\Http\Requests\StoreLetterRequest;
 use App\Http\Requests\UpdateLetterRequest;
 use App\Models\Attachment;
+use App\Models\ArchiveClassification;
 use App\Models\Classification;
 use App\Models\Config;
 use App\Models\Letter;
@@ -91,17 +92,32 @@ class OutgoingLetterController extends Controller
         try {
             $user = auth()->user();
 
-            if ($request->type != LetterType::OUTGOING->type()) throw new \Exception(__('menu.transaction.outgoing_letter'));
+            if ($request->type != LetterType::OUTGOING->type()) {
+                throw new \Exception(__('menu.transaction.outgoing_letter'));
+            }
+
             $newLetter = $request->validated();
             $newLetter['user_id'] = $user->id;
+            $counter = Letter::where('year', date('Y'))->count();
+            $counter += 1;
+
+            $sequenceNumber = str_pad((string)$counter, 3, '0', STR_PAD_LEFT);
+            $newLetter['reference_number'] = str_replace('[XXX]', $sequenceNumber, $newLetter['reference_number']);
+
             $letter = Letter::create($newLetter);
+
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
-                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
+
+                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) {
+                        continue;
+                    }
+
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
                     $attachment->storeAs('public/attachments', $filename);
+
                     Attachment::create([
                         'filename' => $filename,
                         'extension' => $extension,
@@ -139,9 +155,26 @@ class OutgoingLetterController extends Controller
      */
     public function edit(Letter $outgoing): View
     {
+        $classification = ArchiveClassification::query()
+            ->where('full_code', $outgoing->classification_code)
+            ->first();
+
+        $selectedClassifications = [];
+
+        while ($classification) {
+            array_unshift($selectedClassifications, [
+                'id' => $classification->id,
+                'code' => $classification->code,
+                'name' => $classification->name,
+                'parent_id' => $classification->parent_id,
+            ]);
+
+            $classification = $classification->parent;
+        }
+
         return view('pages.transaction.outgoing.edit', [
             'data' => $outgoing,
-            'classifications' => Classification::all(),
+            'selectedClassifications' => $selectedClassifications,
         ]);
     }
 
@@ -156,13 +189,19 @@ class OutgoingLetterController extends Controller
     {
         try {
             $outgoing->update($request->validated());
+
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
-                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
+
+                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) {
+                        continue;
+                    }
+
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
                     $attachment->storeAs('public/attachments', $filename);
+
                     Attachment::create([
                         'filename' => $filename,
                         'extension' => $extension,
@@ -171,6 +210,7 @@ class OutgoingLetterController extends Controller
                     ]);
                 }
             }
+
             return back()->with('success', __('menu.general.success'));
         } catch (\Throwable $exception) {
             return back()->with('error', $exception->getMessage());

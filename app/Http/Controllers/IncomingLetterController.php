@@ -93,32 +93,17 @@ class IncomingLetterController extends Controller
         try {
             $user = auth()->user();
 
-            if ($request->type != LetterType::INCOMING->type()) {
-                throw new \Exception(__('menu.transaction.incoming_letter'));
-            }
-
+            if ($request->type != LetterType::INCOMING->type()) throw new \Exception(__('menu.transaction.incoming_letter'));
             $newLetter = $request->validated();
             $newLetter['user_id'] = $user->id;
-
-            // get counter for the current year of classification code
-            $counter = Letter::where('year', date('Y'))->count();
-            $counter += 1;
-
-            $sequenceNumber = str_pad((string)$counter, 3, '0', STR_PAD_LEFT);
-            $newLetter['reference_number'] = str_replace('[XXX]', $sequenceNumber, $newLetter['reference_number']);
-
             $letter = Letter::create($newLetter);
-
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
-
-                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) { continue; }
-
+                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
                     $attachment->storeAs('public/attachments', $filename);
-
                     Attachment::create([
                         'filename' => $filename,
                         'extension' => $extension,
@@ -127,7 +112,6 @@ class IncomingLetterController extends Controller
                     ]);
                 }
             }
-
             return redirect()
                 ->route('transaction.incoming.index')
                 ->with('success', __('menu.general.success'));
@@ -157,26 +141,9 @@ class IncomingLetterController extends Controller
      */
     public function edit(Letter $incoming): View
     {
-        $classification = ArchiveClassification::query()
-            ->where('full_code', $incoming->classification_code)
-            ->first();
-
-        $selectedClassifications = [];
-
-        while ($classification) {
-            array_unshift($selectedClassifications, [
-                'id' => $classification->id,
-                'code' => $classification->code,
-                'name' => $classification->name,
-                'parent_id' => $classification->parent_id,
-            ]);
-
-            $classification = $classification->parent;
-        }
-
         return view('pages.transaction.incoming.edit', [
             'data' => $incoming,
-            'selectedClassifications' => $selectedClassifications,
+            'classifications' => Classification::all(),
         ]);
     }
 

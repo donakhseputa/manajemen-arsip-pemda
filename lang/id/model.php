@@ -18,6 +18,10 @@ return [
             'not_disposed' => 'Belum Disposisi',
         ],
         'classification_code' => 'Kode Klasifikasi',
+        'classification_level_1' => 'Klasifikasi Level 1',
+        'classification_level_2' => 'Klasifikasi Level 2',
+        'classification_level_3' => 'Klasifikasi Level 3',
+        'classification_level_4' => 'Klasifikasi Level 4',
     ],
     'disposition' => [
         'to' => 'Penerima',

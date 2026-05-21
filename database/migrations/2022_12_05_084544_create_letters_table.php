@@ -40,7 +40,6 @@ return new class extends Migration
             $table->year('year')->nullable();
             $table->string('type')->default('incoming')->comment('Surat Masuk (incoming)/Surat Keluar (outgoing)');
             $table->string('classification_code');
-            $table->foreign('classification_code')->references('full_code')->on($this->archiveClassification);
             $table->foreignId('user_id')->constrained($this->user)->cascadeOnUpdate();
             $table->timestamps();
         });
