@@ -76,8 +76,11 @@ class OutgoingLetterController extends Controller
      */
     public function create(): View
     {
+        $agendaFormat = sprintf('SK-%s-[XXX]', date('Ymd'));
+
         return view('pages.transaction.outgoing.create', [
             'classifications' => Classification::all(),
+            'agendaFormat' => $agendaFormat,
         ]);
     }
 
@@ -103,6 +106,14 @@ class OutgoingLetterController extends Controller
 
             $sequenceNumber = str_pad((string)$counter, 3, '0', STR_PAD_LEFT);
             $newLetter['reference_number'] = str_replace('[XXX]', $sequenceNumber, $newLetter['reference_number']);
+            $newLetter['year'] = date('Y');
+
+            $sequenceNumber = Letter::query()
+                ->where('year', date('Y'))
+                ->where('type', LetterType::OUTGOING->type())
+                ->count() + 1;
+            $agendaNumber = str_pad((string) $sequenceNumber, 4, '0', STR_PAD_LEFT);
+            $newLetter['agenda_number'] = str_replace('[XXX]', $agendaNumber, $newLetter['agenda_number']);
 
             $letter = Letter::create($newLetter);
 

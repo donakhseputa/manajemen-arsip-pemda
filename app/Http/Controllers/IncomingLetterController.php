@@ -77,8 +77,11 @@ class IncomingLetterController extends Controller
      */
     public function create(): View
     {
+        $agendaFormat = sprintf('SM-%s-[XXX]', date('Ymd'));
+
         return view('pages.transaction.incoming.create', [
             'classifications' => Classification::all(),
+            'agendaFormat' => $agendaFormat,
         ]);
     }
 
@@ -93,14 +96,29 @@ class IncomingLetterController extends Controller
         try {
             $user = auth()->user();
 
-            if ($request->type != LetterType::INCOMING->type()) throw new \Exception(__('menu.transaction.incoming_letter'));
+            if ($request->type != LetterType::INCOMING->type()) {
+                throw new \Exception(__('menu.transaction.incoming_letter'));
+            }
+
             $newLetter = $request->validated();
             $newLetter['user_id'] = $user->id;
+            $newLetter['year'] = date('Y');
+            $sequenceNumber = Letter::query()
+                ->where('year', date('Y'))
+                ->where('type', LetterType::INCOMING->type())
+                ->count() + 1;
+            $agendaNumber = str_pad((string) $sequenceNumber, 4, '0', STR_PAD_LEFT);
+            $newLetter['agenda_number'] = str_replace('[XXX]', $agendaNumber, $newLetter['agenda_number']);
             $letter = Letter::create($newLetter);
+
             if ($request->hasFile('attachments')) {
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
-                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
+
+                    if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])){
+                        continue;
+                    }
+
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
                     $attachment->storeAs('public/attachments', $filename);

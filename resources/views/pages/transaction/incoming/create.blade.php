@@ -17,7 +17,13 @@
                     <x-input-form name="from" :label="__('model.letter.from')"/>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
-                    <x-input-form name="agenda_number" :label="__('model.letter.agenda_number')"/>
+                    <div class="mb-3">
+                        <label for="agenda_number" class="form-label">{{ __('model.letter.agenda_number') }}</label>
+                        <input type="text" class="form-control " id="agenda_number" name="agenda_number" value="{{ $agendaFormat }}" readonly>
+                        <div class="form-text mb-3">
+                            <em>Auto Generated</em>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
                     <x-input-form name="letter_date" :label="__('model.letter.letter_date')" type="date"/>

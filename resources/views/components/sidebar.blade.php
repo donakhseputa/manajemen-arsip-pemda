@@ -1,8 +1,11 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-    <div class="app-brand demo">
+    <div class="app-brand demo mt-0">
         <a href="{{ route('home') }}" class="app-brand-link">
-            <img src="{{ asset('logo-black.png') }}" alt="{{ config('app.name') }}" width="35">
-            <span class="app-brand-text demo text-black fw-bolder ms-2">{{ config('app.name') }}</span>
+            <img src="{{ asset('sneat/img/logo.png') }}" alt="{{ config('app.name') }}" width="60">
+            <div class="d-flex flex-column ms-2">
+                <span class="app-brand-text text-black fw-bolder fs-3">SMS</span>
+                <span class="fs-tiny">{{ config('app.description') }}</span>
+            </div>
         </a>
 
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -101,12 +104,12 @@
                                 data-i18n="{{ __('menu.reference.archive-classifications') }}">{{ __('menu.reference.archive-classifications') }}</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.classification.*') ? 'active' : '' }}">
+                    {{-- <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.classification.*') ? 'active' : '' }}">
                         <a href="{{ route('reference.classification.index') }}" class="menu-link">
                             <div
                                 data-i18n="{{ __('menu.reference.classification') }}">{{ __('menu.reference.classification') }}</div>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.status.*') ? 'active' : '' }}">
                         <a href="{{ route('reference.status.index') }}" class="menu-link">
                             <div data-i18n="{{ __('menu.reference.status') }}">{{ __('menu.reference.status') }}</div>

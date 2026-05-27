@@ -65,9 +65,9 @@
             <div class="card">
                 <div class="card-body">
                     <!-- Logo -->
-                    <div class="app-brand justify-content-center">
+                    <div class="app-brand justify-content-center mb-0">
                         <a href="{{ route('home') }}" class="app-brand-link gap-2">
-                            <img src="{{ asset('logo-black.png') }}" alt="{{ config('app.name') }}" srcset="" width="75px">
+                            <img src="{{ asset('sneat/img/logo-full.png') }}" alt="{{ config('app.name') }}" srcset="" width="300px">
                         </a>
                     </div>
 

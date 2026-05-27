@@ -18,20 +18,25 @@ class LetterFactory extends Factory
      */
     public function definition(): array
     {
-        $year = date('Y');
+        $date = $this->faker->date();
+        $year = date('Y', strtotime($date));
+        $ymd = date('Ymd', strtotime($date));
+        $type = $this->faker->randomElement([LetterType::INCOMING, LetterType::OUTGOING]);
+        $typeCode = $type === LetterType::INCOMING->type() ? 'SM' : 'SK';
+        $agendaNumber = sprintf('%s-%s-%s', $typeCode, $ymd,str_pad($this->faker->randomNumber(4), 4, '0', STR_PAD_LEFT));
         $classificationCodes = $this->faker->regexify('[0-9]{1}00\.1\.1');
 
         return [
             'reference_number' => $classificationCodes . '/' . $this->faker->regexify('/[0-9]{3}/(UM-KESRA|UM-PL)/[A-Z]{3}/(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)/') . '/' . $year,
-            'agenda_number' => $this->faker->randomNumber(5),
+            'agenda_number' => $agendaNumber,
             'from' => $this->faker->name('male'),
             'to' => $this->faker->name('female'),
-            'letter_date' => $this->faker->date(),
-            'received_date'=> $this->faker->date(),
+            'letter_date' => $date,
+            'received_date'=> $date,
             'description' => $this->faker->sentence(7),
             'note' => $this->faker->sentence(3),
             'year' => $year,
-            'type' => $this->faker->randomElement([LetterType::INCOMING->type(), LetterType::OUTGOING->type()]),
+            'type' => $type->type(),
             'classification_code' => $classificationCodes,
             'user_id' => 1,
         ];

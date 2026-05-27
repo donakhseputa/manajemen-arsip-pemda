@@ -187,7 +187,7 @@
                     <x-input-form
                         :value="$data->agenda_number"
                         name="agenda_number"
-                        :label="__('model.letter.agenda_number')"/>
+                        :label="__('model.letter.agenda_number')" readonly/>
                 </div>
 
                 <div class="col-sm-12 col-md-12 col-lg-12">

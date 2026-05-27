@@ -16,6 +16,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'version' => env('APP_VERSION', '1.0.0'),
+    'description' => env('APP_DESCRIPTION', 'Sistem Manajemen Surat'),
 
     /*
     |--------------------------------------------------------------------------
