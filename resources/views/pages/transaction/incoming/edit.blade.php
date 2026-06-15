@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-sm-12 col-12 col-md-12 col-lg-12">
                     <x-input-textarea-form :value="$data->description" name="description"
-                                           :label="__('model.letter.description')"/>
+                                           :label="__('model.letter.description')" required />
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
                     <div class="mb-3">
