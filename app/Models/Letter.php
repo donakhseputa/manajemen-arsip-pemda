@@ -30,6 +30,7 @@ class Letter extends Model
         'type',
         'classification_code',
         'user_id',
+        'year',
     ];
 
     /**
@@ -38,6 +39,7 @@ class Letter extends Model
     protected $casts = [
         'letter_date' => 'date',
         'received_date' => 'date',
+        'year' => 'integer',
     ];
 
     protected $appends = [

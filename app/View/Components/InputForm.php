@@ -14,18 +14,20 @@ class InputForm extends Component
     public string $value;
     public bool $readonly;
     public bool $disabled;
+    public bool $required;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(string $name, string $label, string $type = 'text', string $value = '', $readonly = false, $disabled = false)
+    public function __construct(string $name, string $label, string $type = 'text', string $value = '', $readonly = false, $disabled = false, $required = false)
     {
         $this->name = $name;
         $this->label = $label;
         $this->type = $type;
         $this->value = $value;
+        $this->required = $required;
         $this->readonly = $readonly;
         $this->disabled = $disabled;
     }
