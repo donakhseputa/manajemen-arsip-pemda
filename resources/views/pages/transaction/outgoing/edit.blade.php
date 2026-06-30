@@ -202,7 +202,8 @@
                     <x-input-textarea-form
                         :value="$data->description"
                         name="description"
-                        :label="__('model.letter.description')"/>
+                        :label="__('model.letter.description')"
+                        required />
                 </div>
 
                 <div class="col-sm-12 col-md-6 col-lg-4">

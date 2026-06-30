@@ -8,7 +8,12 @@ use Illuminate\View\Component;
 
 class InputTextareaForm extends Component
 {
-    public string $name, $label, $value;
+    public string $name;
+    public string $label;
+    public string $value;
+    public bool $readonly;
+    public bool $disabled;
+    public bool $required;
 
     /**
      * Create a new component instance.
@@ -17,11 +22,14 @@ class InputTextareaForm extends Component
      * @param string $label
      * @param string $value
      */
-    public function __construct(string $name, string $label, string $value = '')
+    public function __construct(string $name, string $label, string $value = '', $readonly = false, $disabled = false, $required = false)
     {
         $this->name = $name;
         $this->label = $label;
         $this->value = $value;
+        $this->readonly = $readonly;
+        $this->disabled = $disabled;
+        $this->required = $required;
     }
 
     /**
