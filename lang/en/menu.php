@@ -54,6 +54,7 @@ return [
         'success' => 'Success',
         'fail' => 'Fail',
         'doesnt_exists' => ":attribute doesn't exists",
+        'archive' => 'Archive',
     ],
     'auth' => [
         'login' => 'Login',

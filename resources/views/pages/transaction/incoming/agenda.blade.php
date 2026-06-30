@@ -36,14 +36,16 @@
                             <label class="form-label">{{ __('menu.general.action') }}</label>
                             <div class="row">
                                 <div class="col">
-                                    <button class="btn btn-primary"
+                                    <button class="btn btn-sm btn-primary"
                                             type="submit">{{ __('menu.general.filter') }}</button>
                                     <a
                                         href="{{ route('agenda.incoming.print') . '?' . $query }}"
                                         target="_blank"
-                                        class="btn btn-primary">
+                                        class="btn btn-sm btn-primary">
                                         {{ __('menu.general.print') }}
                                     </a>
+                                    <button class="btn btn-sm btn-danger"
+                                            type="button">{{ __('menu.general.archive') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -54,43 +56,50 @@
         <div class="table-responsive text-nowrap">
             <table class="table">
                 <thead>
-                <tr>
-                    <th>{{ __('model.letter.agenda_number') }}</th>
-                    <th>{{ __('model.letter.reference_number') }}</th>
-                    <th>{{ __('model.letter.from') }}</th>
-                    <th>{{ __('model.letter.letter_date') }}</th>
-                </tr>
+                    <tr>
+                        <th>
+                            <input type="checkbox" name="select_all" id="select_all">
+                        </th>
+                        <th>{{ __('model.letter.agenda_number') }}</th>
+                        <th>{{ __('model.letter.reference_number') }}</th>
+                        <th>{{ __('model.letter.from') }}</th>
+                        <th>{{ __('model.letter.letter_date') }}</th>
+                    </tr>
                 </thead>
                 @if($data)
                     <tbody>
-                    @foreach($data as $agenda)
-                        <tr>
-                            <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
-                                <strong>{{ $agenda->agenda_number }}</strong></td>
-                            <td>
-                                <a href="{{ route('transaction.incoming.show', $agenda) }}">{{ $agenda->reference_number }}</a>
-                            </td>
-                            <td>{{ $agenda->from }}</td>
-                            <td>{{ $agenda->formatted_letter_date }}</td>
-                        </tr>
-                    @endforeach
+                        @foreach($data as $agenda)
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="selected[]" value="{{ $agenda->id }}">
+                                </td>
+                                <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                                    <strong>{{ $agenda->agenda_number }}</strong></td>
+                                <td>
+                                    <a href="{{ route('transaction.incoming.show', $agenda) }}">{{ $agenda->reference_number }}</a>
+                                </td>
+                                <td>{{ $agenda->from }}</td>
+                                <td>{{ $agenda->formatted_letter_date }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 @else
                     <tbody>
                     <tr>
-                        <td colspan="4" class="text-center">
+                        <td colspan="5" class="text-center">
                             {{ __('menu.general.empty') }}
                         </td>
                     </tr>
                     </tbody>
                 @endif
                 <tfoot class="table-border-bottom-0">
-                <tr>
-                    <th>{{ __('model.letter.agenda_number') }}</th>
-                    <th>{{ __('model.letter.reference_number') }}</th>
-                    <th>{{ __('model.letter.from') }}</th>
-                    <th>{{ __('model.letter.letter_date') }}</th>
-                </tr>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">{{ __('model.letter.agenda_number') }}</th>
+                        <th scope="col">{{ __('model.letter.reference_number') }}</th>
+                        <th scope="col">{{ __('model.letter.from') }}</th>
+                        <th scope="col">{{ __('model.letter.letter_date') }}</th>
+                    </tr>
                 </tfoot>
             </table>
         </div>
