@@ -2,33 +2,38 @@
 
 namespace App\View\Components;
 
-use App\Models\Disposition;
-use App\Models\Letter;
-use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class DispositionCard extends Component
+class DashboardCardSimple extends Component
 {
-    public Disposition $disposition;
-    public Letter $letter;
-
+    public string $label;
+    public string $color;
+    public string $icon;
+    public int $value;
+    public float $percentage;
+    public bool $daily;
     /**
-     * @param Disposition $disposition
-     * @param Letter $letter
+     * Create a new component instance.
+     *
+     * @return void
      */
-    public function __construct(Disposition $disposition, Letter $letter)
+    public function __construct($label, $value, $daily, $color, $icon, $percentage)
     {
-        $this->disposition = $disposition;
-        $this->letter = $letter;
+        $this->label = $label;
+        $this->value = $value;
+        $this->daily = $daily;
+        $this->color = $color;
+        $this->icon = $icon;
+        $this->percentage = $percentage ?? 0.00;
     }
 
     /**
      * Get the view / contents that represent the component.
      *
-     * @return View
+     * @return \Illuminate\Contracts\View\View|\Closure|string
      */
-    public function render(): View
+    public function render()
     {
-        return view('components.disposition-card');
+        return view('components.dashboard-card-simple');
     }
 }

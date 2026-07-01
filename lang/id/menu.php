@@ -55,6 +55,7 @@ return [
         'fail' => 'Gagal',
         'doesnt_exists' => ":attribute tidak ada",
         'archive' => 'Arsipkan',
+        'per_page' => 'Per Halaman',
     ],
     'auth' => [
         'login' => 'Masuk',

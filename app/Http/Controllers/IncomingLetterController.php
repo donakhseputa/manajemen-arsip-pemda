@@ -40,12 +40,46 @@ class IncomingLetterController extends Controller
      */
     public function agenda(Request $request): View
     {
+        $perPage = $request->per_page ?? 10;
+
+        $data = Letter::incoming()
+            ->withoutTrashed()
+            ->agenda($request->since, $request->until, $request->filter)
+            ->render($request->search, $perPage);
+
         return view('pages.transaction.incoming.agenda', [
-            'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter)->render($request->search),
+            'data' => $data,
             'search' => $request->search,
             'since' => $request->since,
             'until' => $request->until,
             'filter' => $request->filter,
+            'perPage' => $perPage,
+            'query' => $request->getQueryString(),
+        ]);
+    }
+
+    /**
+     * Display a listing of the incoming letter agenda.
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function agendaArchived(Request $request): View
+    {
+        $perPage = $request->per_page ?? 10;
+
+        $data = Letter::incoming()
+            ->onlyTrashed()
+            ->agenda($request->since, $request->until, $request->filter)
+            ->render($request->search, $perPage);
+
+        return view('pages.transaction.incoming.agenda-archived', [
+            'data' => $data,
+            'search' => $request->search,
+            'since' => $request->since,
+            'until' => $request->until,
+            'filter' => $request->filter,
+            'perPage' => $perPage,
             'query' => $request->getQueryString(),
         ]);
     }

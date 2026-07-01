@@ -45,7 +45,9 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('agenda')->as('agenda.')->group(function () {
+        Route::get('archive', [\App\Http\Controllers\IncomingLetterController::class, 'archive'])->name('archive');
         Route::get('incoming', [\App\Http\Controllers\IncomingLetterController::class, 'agenda'])->name('incoming');
+        Route::get('incoming/archived', [\App\Http\Controllers\IncomingLetterController::class, 'agendaArchived'])->name('incoming.archived');
         Route::get('incoming/print', [\App\Http\Controllers\IncomingLetterController::class, 'print'])->name('incoming.print');
         Route::get('outgoing', [\App\Http\Controllers\OutgoingLetterController::class, 'agenda'])->name('outgoing');
         Route::get('outgoing/print', [\App\Http\Controllers\OutgoingLetterController::class, 'print'])->name('outgoing.print');

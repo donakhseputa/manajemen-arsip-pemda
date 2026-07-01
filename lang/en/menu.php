@@ -55,6 +55,7 @@ return [
         'fail' => 'Fail',
         'doesnt_exists' => ":attribute doesn't exists",
         'archive' => 'Archive',
+        'per_page' => 'Per Page',
     ],
     'auth' => [
         'login' => 'Login',

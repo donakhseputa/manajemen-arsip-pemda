@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Letter extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        SoftDeletes;
 
     /**
      * @var string[]
@@ -101,13 +103,15 @@ class Letter extends Model
         });
     }
 
-    public function scopeRender($query, $search)
+    public function scopeRender($query, $search, $perPage = null)
     {
+        $perPage = $perPage ?? Config::getValueByCode(ConfigEnum::PAGE_SIZE);
+
         return $query
             ->with(['attachments', 'classification'])
             ->search($search)
             ->latest('created_at')
-            ->paginate(Config::getValueByCode(ConfigEnum::PAGE_SIZE))
+            ->paginate($perPage)
             ->appends([
                 'search' => $search,
             ]);
