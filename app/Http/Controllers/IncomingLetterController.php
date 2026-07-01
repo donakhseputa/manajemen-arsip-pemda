@@ -84,6 +84,30 @@ class IncomingLetterController extends Controller
         ]);
     }
 
+    public function archive()
+    {
+        try {
+            $bulkIds = request()->input('ids', []);
+
+            foreach ($bulkIds as $id) {
+                $incoming = Letter::findOrFail($id);
+                $incoming->delete();
+            }
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'message' => __('menu.general.success'),
+                ]);
+            }
+
+            return redirect()
+                ->route('transaction.incoming.agenda')
+                ->with('success', __('menu.general.success'));
+        } catch (\Throwable $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+    }
+
     /**
      * @param Request $request
      * @return View

@@ -56,6 +56,10 @@ return [
         'doesnt_exists' => ":attribute doesn't exists",
         'archive' => 'Archive',
         'per_page' => 'Per Page',
+        'archive_confirm' => 'Are you sure want to archive this?',
+        'archive_warning' => 'This action cannot be undone!',
+        'no_selection' => 'No data selected',
+        'select_at_least_one' => 'Please select at least one data',
     ],
     'auth' => [
         'login' => 'Login',

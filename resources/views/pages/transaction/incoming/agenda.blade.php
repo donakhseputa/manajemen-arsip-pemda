@@ -70,7 +70,7 @@
                                         class="btn btn-sm btn-primary">
                                         {{ __('menu.general.print') }}
                                     </a>
-                                    <button class="btn btn-sm btn-danger"
+                                    <button class="btn btn-sm btn-danger btn-archive"
                                             type="button">{{ __('menu.general.archive') }}</button>
                                 </div>
                             </div>
@@ -207,7 +207,7 @@
                                         icon: 'success',
                                         title: response.message
                                     });
-                                    location.reload();
+                                    // location.reload();
                                 },
                                 error: function (xhr) {
                                     Toast.fire({

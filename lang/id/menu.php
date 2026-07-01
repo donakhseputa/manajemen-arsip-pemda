@@ -56,6 +56,10 @@ return [
         'doesnt_exists' => ":attribute tidak ada",
         'archive' => 'Arsipkan',
         'per_page' => 'Per Halaman',
+        'archive_confirm' => 'Anda yakin ingin mengarsipkannya?',
+        'archive_warning' => 'Aksi ini tidak dapat dibatalkan!',
+        'no_selection' => 'Tidak ada data yang dipilih',
+        'select_at_least_one' => 'Silakan pilih setidaknya satu data',
     ],
     'auth' => [
         'login' => 'Masuk',
