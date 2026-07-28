@@ -10,9 +10,9 @@
             $('#editModal input#phone').val($(this).data('phone'));
             $('#editModal input#email').val($(this).data('email'));
             if ($(this).data('active') == 1) {
-                $('#editModal input#is_active').attr('checked', 1)
+                $('#editModal input#is_active').prop('checked', true);
             } else {
-                $('#editModal input#is_active').removeAttribute('checked');
+                $('#editModal input#is_active').prop('checked', false);
             }
         });
     </script>
@@ -76,21 +76,12 @@
                 @else
                     <tbody>
                     <tr>
-                        <td colspan="4" class="text-center">
+                        <td colspan="5" class="text-center">
                             {{ __('menu.general.empty') }}
                         </td>
                     </tr>
                     </tbody>
                 @endif
-                <tfoot class="table-border-bottom-0">
-                <tr>
-                    <th>{{ __('model.user.name') }}</th>
-                    <th>{{ __('model.user.email') }}</th>
-                    <th>{{ __('model.user.phone') }}</th>
-                    <th>{{ __('model.user.is_active') }}</th>
-                    <th>{{ __('menu.general.action') }}</th>
-                </tr>
-                </tfoot>
             </table>
         </div>
     </div>

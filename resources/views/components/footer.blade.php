@@ -5,11 +5,7 @@
             <script>
                 document.write(new Date().getFullYear());
             </script>
-            , {{ __('footer.made_by') }}
-            <a href="https://github.com/donakhseputa" target="_blank" class="footer-link fw-bolder">DONAKHSEPUTA</a>
-            <span class="badge bg-primary">
-                v{{ config('app.version') }}
-            </span>
+           - Sistem Manajemen Surat
         </div>
     </div>
 </footer>

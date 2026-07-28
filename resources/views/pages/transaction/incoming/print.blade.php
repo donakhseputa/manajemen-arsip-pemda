@@ -216,7 +216,7 @@
                     </th>
 
                     <th width="12%">
-                        {{ __('model.letter.letter_date') }}
+                        {{ __('model.letter.received_date') }}
                     </th>
 
                     <th width="27%">
@@ -244,7 +244,7 @@
                         </td>
 
                         <td class="text-center">
-                            {{ $letter->formatted_letter_date }}
+                            {{ $letter->formatted_received_date }}
                         </td>
 
                         <td>

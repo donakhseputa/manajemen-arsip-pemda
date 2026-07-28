@@ -6,10 +6,7 @@ use App\Models\ArchiveClassification;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
-use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class ArchiveClassificationsDataTable extends DataTable
@@ -23,12 +20,6 @@ class ArchiveClassificationsDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->editColumn('created_at', function (ArchiveClassification $archiveClassification) {
-                return $archiveClassification->created_at?->format('d M Y H:i:s');
-            })
-            ->editColumn('updated_at', function (ArchiveClassification $archiveClassification) {
-                return $archiveClassification->updated_at?->format('d M Y H:i:s');
-            })
             ->addColumn('action', function (ArchiveClassification $archiveClassification) {
                 $buttons = [
                     'view' => true,
@@ -51,7 +42,7 @@ class ArchiveClassificationsDataTable extends DataTable
     public function query(ArchiveClassification $model): QueryBuilder
     {
         return $model->newQuery()
-            ->orderBy('id', 'asc');
+            ->orderBy('full_code', 'asc');
     }
 
     /**
@@ -63,11 +54,29 @@ class ArchiveClassificationsDataTable extends DataTable
     {
         return $this->builder()
             ->setTableId('archiveclassifications-table')
+            ->addTableClass('table table-hover align-middle w-100 mb-0')
             ->columns($this->getColumns())
             ->minifiedAjax()
-            //->dom('Bfrtip')
             ->orderBy(1)
-            ->selectStyleSingle();
+            ->selectStyleSingle()
+            ->parameters([
+                'dom' => 'rt<"archive-classification-footer d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-2 px-3 py-3"<"archive-classification-info"i><"archive-classification-pagination d-flex justify-content-md-end justify-content-start"p>>',
+                'pageLength' => 10,
+                'autoWidth' => false,
+                'language' => [
+                    'emptyTable' => 'Belum ada data klasifikasi arsip',
+                    'info' => 'Menampilkan _START_ sampai _END_ dari _TOTAL_ data',
+                    'infoEmpty' => 'Menampilkan 0 data',
+                    'infoFiltered' => '(difilter dari _MAX_ total data)',
+                    'loadingRecords' => 'Memuat data...',
+                    'processing' => 'Memproses...',
+                    'zeroRecords' => 'Data tidak ditemukan',
+                    'paginate' => [
+                        'previous' => '‹',
+                        'next' => '›',
+                    ],
+                ],
+            ]);
     }
 
     /**
@@ -78,14 +87,18 @@ class ArchiveClassificationsDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::make('full_code')->title('Kode Klasifikasi'),
-            Column::make('name'),
+            Column::make('full_code')
+                ->title('KODE KLASIFIKASI')
+                ->width('220px')
+                ->addClass('fw-semibold'),
+            Column::make('name')
+                ->title('NAMA KLASIFIKASI'),
             Column::computed('action')
                 ->title(__('menu.general.action'))
                 ->exportable(false)
                 ->printable(false)
+                ->width('160px')
                 ->addClass('text-center'),
-
         ];
     }
 

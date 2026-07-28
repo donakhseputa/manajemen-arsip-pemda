@@ -27,7 +27,7 @@ class IncomingLetterController extends Controller
     public function index(Request $request): View
     {
         return view('pages.transaction.incoming.index', [
-            'data' => Letter::incoming()->render($request->search),
+            'data' => Letter::incoming()->orderBy('letter_date', 'DESC')->render($request->search),
             'search' => $request->search,
         ]);
     }
@@ -41,20 +41,24 @@ class IncomingLetterController extends Controller
     public function agenda(Request $request): View
     {
         $perPage = $request->per_page ?? 10;
+        $filter = $request->filter ?? 'received_date';
+        $since = $request->since;
+        $until = $request->until;
 
         $data = Letter::incoming()
             ->withoutTrashed()
-            ->agenda($request->since, $request->until, $request->filter)
+            ->agenda($since, $until, $filter)
+            ->orderBy('letter_date', 'DESC')
             ->render($request->search, $perPage);
 
         return view('pages.transaction.incoming.agenda', [
             'data' => $data,
             'search' => $request->search,
-            'since' => $request->since,
-            'until' => $request->until,
-            'filter' => $request->filter,
+            'since' => $since,
+            'until' => $until,
+            'filter' => $filter,
             'perPage' => $perPage,
-            'query' => $request->getQueryString(),
+            'query' => http_build_query(array_merge($request->query(), ['filter' => $filter])),
         ]);
     }
 
@@ -67,20 +71,96 @@ class IncomingLetterController extends Controller
     public function agendaArchived(Request $request): View
     {
         $perPage = $request->per_page ?? 10;
+        $filter = $request->filter ?? 'received_date';
+        $selectedYear = $request->filled('year') ? (int) $request->year : null;
+        $since = $request->since ?? ($selectedYear ? sprintf('%d-01-01', $selectedYear) : null);
+        $until = $request->until ?? ($selectedYear ? sprintf('%d-12-31', $selectedYear) : null);
+        $folderStartYear = $request->filled('start_year') ? (int) $request->start_year : null;
+        $folderEndYear = $request->filled('end_year') ? (int) $request->end_year : null;
+        $archiveYearExpression = 'COALESCE(letters.year, YEAR(letters.received_date), YEAR(letters.letter_date), YEAR(letters.created_at))';
 
-        $data = Letter::incoming()
+        if ($folderStartYear && $folderEndYear && $folderStartYear > $folderEndYear) {
+            [$folderStartYear, $folderEndYear] = [$folderEndYear, $folderStartYear];
+        }
+
+        $allArchiveYears = Letter::incoming()
             ->onlyTrashed()
-            ->agenda($request->since, $request->until, $request->filter)
-            ->render($request->search, $perPage);
+            ->selectRaw("$archiveYearExpression as archive_year, COUNT(*) as total")
+            ->groupByRaw($archiveYearExpression)
+            ->orderByDesc('archive_year')
+            ->get();
+
+        $archiveYearValues = $allArchiveYears
+            ->pluck('archive_year')
+            ->filter()
+            ->map(fn ($year) => (int) $year)
+            ->values();
+
+        $archiveYearOptions = $archiveYearValues->count()
+            ? collect(range($archiveYearValues->max(), $archiveYearValues->min()))
+            : collect();
+
+        $archiveYearsQuery = Letter::incoming()
+            ->onlyTrashed()
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = trim($request->search);
+                $keyword = '%' . $search . '%';
+
+                return $query->where(function ($query) use ($keyword) {
+                    $query->where('reference_number', 'LIKE', $keyword)
+                        ->orWhere('agenda_number', 'LIKE', $keyword)
+                        ->orWhere('from', 'LIKE', $keyword)
+                        ->orWhere('to', 'LIKE', $keyword)
+                        ->orWhere('description', 'LIKE', $keyword)
+                        ->orWhere('note', 'LIKE', $keyword);
+                });
+            })
+            ->when($folderStartYear, function ($query) use ($archiveYearExpression, $folderStartYear) {
+                return $query->whereRaw("$archiveYearExpression >= ?", [$folderStartYear]);
+            })
+            ->when($folderEndYear, function ($query) use ($archiveYearExpression, $folderEndYear) {
+                return $query->whereRaw("$archiveYearExpression <= ?", [$folderEndYear]);
+            });
+
+        $archiveYears = $archiveYearsQuery
+            ->selectRaw("$archiveYearExpression as archive_year, COUNT(*) as total")
+            ->groupByRaw($archiveYearExpression)
+            ->orderByDesc('archive_year')
+            ->get();
+
+        $data = null;
+        $hasSelectedYear = filled($selectedYear);
+
+        if ($hasSelectedYear) {
+            $data = Letter::incoming()
+                ->onlyTrashed()
+                ->whereRaw("$archiveYearExpression = ?", [$selectedYear])
+                ->agenda($since, $until, $filter)
+                ->render(null, $perPage);
+        }
+
+        $printQuery = http_build_query(array_filter([
+            'archived' => 1,
+            'year' => $selectedYear,
+            'since' => $since,
+            'until' => $until,
+            'filter' => $filter,
+        ], fn ($value) => filled($value)));
 
         return view('pages.transaction.incoming.agenda-archived', [
             'data' => $data,
+            'archiveYears' => $archiveYears,
+            'archiveYearOptions' => $archiveYearOptions,
+            'selectedYear' => $selectedYear,
+            'folderStartYear' => $folderStartYear,
+            'folderEndYear' => $folderEndYear,
+            'hasSelectedYear' => $hasSelectedYear,
             'search' => $request->search,
-            'since' => $request->since,
-            'until' => $request->until,
-            'filter' => $request->filter,
+            'since' => $since,
+            'until' => $until,
+            'filter' => $filter,
             'perPage' => $perPage,
-            'query' => $request->getQueryString(),
+            'query' => $printQuery,
         ]);
     }
 
@@ -117,22 +197,33 @@ class IncomingLetterController extends Controller
         $agenda = __('menu.agenda.menu');
         $letter = __('menu.agenda.incoming_letter');
         $title = App::getLocale() == 'id' ? "$agenda $letter" : "$letter $agenda";
+        $filter = $request->filter ?? 'received_date';
+        $selectedYear = $request->filled('year') ? (int) $request->year : null;
+        $since = $request->since;
+        $until = $request->until;
+        $archiveYearExpression = 'COALESCE(letters.year, YEAR(letters.received_date), YEAR(letters.letter_date), YEAR(letters.created_at))';
+
+        $data = Letter::incoming()
+            ->when($request->boolean('archived'), function ($query) {
+                return $query->onlyTrashed();
+            })
+            ->when($request->boolean('archived') && $selectedYear, function ($query) use ($archiveYearExpression, $selectedYear) {
+                return $query->whereRaw("$archiveYearExpression = ?", [$selectedYear]);
+            })
+            ->agenda($since, $until, $filter)
+            ->get();
+
         return view('pages.transaction.incoming.print', [
-            'data' => Letter::incoming()->agenda($request->since, $request->until, $request->filter)->get(),
+            'data' => $data,
             'search' => $request->search,
-            'since' => $request->since,
-            'until' => $request->until,
-            'filter' => $request->filter,
+            'since' => $since,
+            'until' => $until,
+            'filter' => $filter,
             'config' => Config::pluck('value','code')->toArray(),
             'title' => $title,
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return View
-     */
     public function create(): View
     {
         $agendaFormat = sprintf('SM-%s-[XXX]', date('Ymd'));
@@ -206,6 +297,18 @@ class IncomingLetterController extends Controller
     {
         return view('pages.transaction.incoming.show', [
             'data' => $incoming->load(['classification', 'user', 'attachments']),
+        ]);
+    }
+
+    public function showArchived($id): View
+    {
+        $incoming = Letter::incoming()
+            ->onlyTrashed()
+            ->with(['classification', 'user', 'attachments'])
+            ->findOrFail($id);
+
+        return view('pages.transaction.incoming.show', [
+            'data' => $incoming,
         ]);
     }
 

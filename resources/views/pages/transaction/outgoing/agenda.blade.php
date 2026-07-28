@@ -26,25 +26,35 @@
         <div class="card-header">
             <form action="{{ url()->current() }}">
                 <input type="hidden" name="search" value="{{ $search ?? '' }}">
-                <div class="row">
-                    <div class="col">
-                        <label for="per_page" class="form-label">{{ __('menu.general.per_page') }}</label>
-                        <select class="form-select" name="per_page" onchange="this.form.submit()">
-                            <option value="10" @selected(old('per_page', $perPage) == 10)>10</option>
-                            <option value="25" @selected(old('per_page', $perPage) == 25)>25</option>
-                            <option value="50" @selected(old('per_page', $perPage) == 50)>50</option>
-                            <option value="100" @selected(old('per_page', $perPage) == 100)>100</option>
-                        </select>
+                <div class="row g-2 align-items-end">
+                    
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="mb-3">
+                            <label for="per_page" class="form-label">{{ __('menu.general.per_page') }}</label>
+                            <select class="form-select" name="per_page" onchange="this.form.submit()">
+                                <option value="10" @selected(old('per_page', $perPage) == 10)>10</option>
+                                <option value="25" @selected(old('per_page', $perPage) == 25)>25</option>
+                                <option value="50" @selected(old('per_page', $perPage) == 50)>50</option>
+                                <option value="100" @selected(old('per_page', $perPage) == 100)>100</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col">
-                        <x-input-form name="since" :label="__('menu.agenda.start_date')" type="date"
-                                      :value="$since ? date('Y-m-d', strtotime($since)) : ''"/>
+                    
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="mb-3">
+                            <x-input-form name="since" :label="__('menu.agenda.start_date')" type="date"
+                                          :value="$since ? date('Y-m-d', strtotime($since)) : ''"/>
+                        </div>
                     </div>
-                    <div class="col">
-                        <x-input-form name="until" :label="__('menu.agenda.end_date')" type="date"
-                                      :value="$until ? date('Y-m-d', strtotime($until)) : ''"/>
+
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="mb-3">
+                            <x-input-form name="until" :label="__('menu.agenda.end_date')" type="date"
+                                          :value="$until ? date('Y-m-d', strtotime($until)) : ''"/>
+                        </div>
                     </div>
-                    <div class="col">
+
+                    <div class="col-lg-2 col-md-6 col-sm-6">
                         <div class="mb-3">
                             <label for="filter" class="form-label">{{ __('menu.agenda.filter_by') }}</label>
                             <select class="form-select" id="filter" name="filter">
@@ -55,22 +65,22 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col">
+
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="mb-3">
-                            <label class="form-label">{{ __('menu.general.action') }}</label>
-                            <div class="row">
-                                <div class="col">
-                                    <button class="btn btn-sm btn-primary"
-                                            type="submit">{{ __('menu.general.filter') }}</button>
-                                    <a
-                                        href="{{ route('agenda.outgoing.print') . '?' . $query }}"
-                                        target="_blank"
-                                        class="btn btn-sm btn-primary">
-                                        {{ __('menu.general.print') }}
-                                    </a>
-                                    <button class="btn btn-sm btn-danger btn-archive"
-                                            type="button">{{ __('menu.general.archive') }}</button>
-                                </div>
+                            <label class="form-label d-block">{{ __('menu.general.action') }}</label>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-primary" type="submit">
+                                    <i class="fa-solid fa-filter me-1"></i> {{ __('menu.general.filter') }}
+                                </button>
+                                <a href="{{ route('agenda.outgoing.print') . '?' . $query }}"
+                                   target="_blank"
+                                   class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-print me-1"></i> {{ __('menu.general.print') }}
+                                </a>
+                                <button class="btn btn-sm btn-danger btn-archive" type="button">
+                                    <i class="fa-solid fa-box-archive me-1"></i> {{ __('menu.general.archive') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -116,15 +126,6 @@
                         </tr>
                     </tbody>
                 @endif
-                <tfoot class="table-border-bottom-0">
-                    <tr>
-                        <th scope="col"></th>
-                        <th scope="col">{{ __('model.letter.agenda_number') }}</th>
-                        <th scope="col">{{ __('model.letter.reference_number') }}</th>
-                        <th scope="col">{{ __('model.letter.to') }}</th>
-                        <th scope="col">{{ __('model.letter.letter_date') }}</th>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>

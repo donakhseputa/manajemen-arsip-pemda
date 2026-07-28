@@ -48,9 +48,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('archive', [\App\Http\Controllers\IncomingLetterController::class, 'archive'])->name('archive');
         Route::get('incoming', [\App\Http\Controllers\IncomingLetterController::class, 'agenda'])->name('incoming');
         Route::get('incoming/archived', [\App\Http\Controllers\IncomingLetterController::class, 'agendaArchived'])->name('incoming.archived');
+        Route::get('incoming/archived/{id}', [\App\Http\Controllers\IncomingLetterController::class, 'showArchived'])->name('incoming.archived.show');
         Route::get('incoming/print', [\App\Http\Controllers\IncomingLetterController::class, 'print'])->name('incoming.print');
         Route::get('outgoing', [\App\Http\Controllers\OutgoingLetterController::class, 'agenda'])->name('outgoing');
         Route::get('outgoing/archived', [\App\Http\Controllers\OutgoingLetterController::class, 'agendaArchived'])->name('outgoing.archived');
+        Route::get('outgoing/archived/{id}', [\App\Http\Controllers\OutgoingLetterController::class, 'showArchived'])->name('outgoing.archived.show');
         Route::get('outgoing/print', [\App\Http\Controllers\OutgoingLetterController::class, 'print'])->name('outgoing.print');
     });
 

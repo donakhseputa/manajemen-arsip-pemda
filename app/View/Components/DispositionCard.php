@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class DashboardCardSimple extends Component
+class DispositionCard extends Component
 {
     public string $label;
     public string $color;

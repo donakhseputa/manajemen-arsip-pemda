@@ -6,7 +6,7 @@ use App\Enums\LetterType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreLetterRequest extends FormRequest
+class StoreLetterStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

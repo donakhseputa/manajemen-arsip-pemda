@@ -4,10 +4,10 @@
     </a>
 @endif
 @if ($buttons['delete'])
-    <button type="submit" class="btn btn-sm btn-danger" form="#delete-{{ $archiveClassification->id }}" onclick="return confirm('Are you sure you want to delete this item?')">
+    <button type="submit" class="btn btn-sm btn-danger" form="delete-{{ $archiveClassification->id }}" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
         Hapus
     </button>
-    <form id="delete-{{ $archiveClassification->id }}" action="{{ route('reference.archive-classifications.destroy', $archiveClassification) }}" method="POST">
+    <form id="delete-{{ $archiveClassification->id }}" action="{{ route('reference.archive-classifications.destroy', $archiveClassification) }}" method="POST" class="d-none">
         @csrf
         @method('DELETE')
     </form>

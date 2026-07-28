@@ -60,19 +60,12 @@
                 @else
                     <tbody>
                     <tr>
-                        <td colspan="4" class="text-center">
+                        <td colspan="3" class="text-center">
                             {{ __('menu.general.empty') }}
                         </td>
                     </tr>
                     </tbody>
                 @endif
-                <tfoot class="table-border-bottom-0">
-                <tr>
-                    <th>#</th>
-                    <th>{{ __('model.status.status') }}</th>
-                    <th>{{ __('menu.general.action') }}</th>
-                </tr>
-                </tfoot>
             </table>
         </div>
     </div>

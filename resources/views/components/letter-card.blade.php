@@ -3,13 +3,21 @@
         <div class="d-flex justify-content-between flex-column flex-sm-row">
             <div class="card-title">
                 <h5 class="text-nowrap mb-0 fw-bold">{{ $letter->reference_number }}</h5>
-                <small class="text-black">
-                    {{ $letter->type == 'incoming' ? $letter->from : $letter->to }} |
-                    <span
-                        class="text-secondary">{{ __('model.letter.agenda_number') }}:</span> {{ $letter->agenda_number }}
-                    |
-                    {{ $letter->classification?->type }}
-                </small>
+                <small class="text-black d-block">
+                <span class="text-secondary">{{ $letter->type == 'incoming' ? 'Pengirim' : 'Penerima' }}:</span>
+                {{ $letter->type == 'incoming' ? $letter->from : $letter->to }}
+            </small>
+
+            <small class="text-black d-block">
+                <span class="text-secondary">
+                    {{ __('model.letter.agenda_number') }}:
+                </span>
+                {{ $letter->agenda_number }}
+            </small>
+
+            <small class="text-black d-block">
+                {{ $letter->classification?->type }}
+            </small>
             </div>
             <div class="card-title d-flex flex-row">
                 <div class="d-inline-block mx-2 text-end text-black">

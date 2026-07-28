@@ -1,4 +1,74 @@
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+<style>
+    /* Warna Dasar Teks & Ikon */
+    #layout-menu .menu-link, 
+    #layout-menu .menu-header-text, 
+    #layout-menu .app-brand-text,
+    #layout-menu .menu-icon {
+        color: #ffffff !important;
+    }
+
+    
+    /* 1. Mencegah menu induk (yang punya submenu) punya background saat anaknya aktif */
+    /* Kita gunakan !important untuk menimpa class 'active' bawaan template */
+    #layout-menu .menu-item.active.open > .menu-link {
+        background-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    /* 2. Menghapus efek hover pada menu induk agar tidak berubah warna */
+    #layout-menu .menu-item.has-submenu > .menu-link:hover {
+        background-color: transparent !important;
+    }
+
+    /* 3. Memberikan efek highlight HANYA pada menu anak (Surat Masuk) */
+    /* Ini target spesifik ke menu yang aktif */
+    #layout-menu .menu-sub .menu-item.active > .menu-link {
+        background-color: rgba(0, 0, 0, 0.45) !important;
+        border-left: 4px solid #ffffff; /* Opsional: Tambahkan garis tepi agar lebih terlihat */
+    }
+
+    /* 4. Memastikan teks tetap putih saat induk aktif */
+    #layout-menu .menu-item.active.open > .menu-link,
+    #layout-menu .menu-item.active.open > .menu-link i {
+        color: #ffffff !important;
+    }
+
+    #layout-menu .menu-link:hover {
+        /* Ganti rgba(0, 0, 0, 0.1) dengan warna yang kamu suka */
+        /* Kode ini memberikan efek sedikit lebih gelap saat di-hover */
+        background-color: rgba(0, 0, 0, 0.45) !important;
+        color: #ffffff !important; /* Pastikan teks tetap putih */
+    }
+
+    /* Khusus untuk menu anak (submenu) agar konsisten */
+    #layout-menu .menu-sub .menu-link:hover {
+        background-color: rgba(0, 0, 0, 0.45) !important;
+    }
+
+    /* Menghilangkan efek background putih bawaan template */
+    .menu-vertical .menu-item .menu-link:hover {
+        background-image: none !important;
+    }
+
+    #layout-menu .menu-item.active > .menu-link {
+        background-color: transparent !important;
+       
+    }
+    
+    /* Jika ingin background tetap ada tapi warnanya mengikuti warna biru sidebar (lebih gelap sedikit) */
+    #layout-menu .menu-item.active > .menu-link {
+        background-color: rgba(0, 0, 0, 0.45) !important;
+    }
+
+    .fs-tiny {
+        color: rgb(255, 255, 255) !important; /* Warna putih transparan */
+        font-size: 0.75rem; /* Ukuran font bawaan Sneat */
+    }
+
+</style>
+
+
+<aside id="layout-menu" class="layout-menu menu-vertical menu" style="background-color: #26a0fc !important;">
     <div class="app-brand demo mt-0">
         <a href="{{ route('home') }}" class="app-brand-link">
             <img src="{{ asset('sneat/img/logo.png') }}" alt="{{ config('app.name') }}" width="60">
