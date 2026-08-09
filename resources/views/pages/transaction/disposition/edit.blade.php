@@ -17,7 +17,22 @@
             @method('PUT')
             <div class="card-body row">
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
-                    <x-input-form name="to" :value="$data->to" :label="__('model.disposition.to')"/>
+                    <div class="mb-3">
+                        <label for="to" class="form-label">{{ __('model.disposition.to') }}</label>
+                        <select class="form-select @error('to') is-invalid @enderror" id="to" name="to">
+                            <option value="" disabled>
+                                -- Pilih {{ __('model.disposition.to') }} --
+                            </option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->name }}" @selected(old('to', $data->to) == $user->name)>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <span class="error invalid-feedback">
+                            {{ $errors->first('to') }}
+                        </span>
+                    </div>
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-6">
                     <x-input-form name="due_date" :value="date('Y-m-d', strtotime($data->due_date))" :label="__('model.disposition.due_date')" type="date"/>
