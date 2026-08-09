@@ -16,4 +16,8 @@ return [
     'today_graphic' => 'Grafik Transaksi Surat',
     'today' => 'Hari Ini',
     'letter_transaction' => 'Transaksi Surat',
+    'disposition_due_reminder' => 'Reminder Tenggat Disposisi',
+    'no_due_reminder' => 'Tidak ada disposisi yang perlu diingatkan.',
+    'new_letter_notification' => 'Notifikasi Surat Baru',
+    'no_new_letter_notification' => 'Tidak ada surat baru.',
 ];

@@ -24,6 +24,12 @@
                 <dt class="col-sm-3">{{ __('model.letter.agenda_number') }}</dt>
                 <dd class="col-sm-9">{{ $data->agenda_number }}</dd>
 
+                <dt class="col-sm-3">{{ __('model.letter.status.label') }}</dt>
+                <dd class="col-sm-9">{{ __('model.letter.status.options.' . $data->status) }}</dd>
+
+                <dt class="col-sm-3">{{ __('model.letter.read_status.label') }}</dt>
+                <dd class="col-sm-9">{{ $data->is_read ? __('model.letter.read_status.read') : __('model.letter.read_status.unread') }}</dd>
+
                 <dt class="col-sm-3">{{ __('model.classification.code') }}</dt>
                 <dd class="col-sm-9">{{ $data->classification_code }}</dd>
 

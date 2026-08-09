@@ -215,6 +215,19 @@
 
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="mb-3">
+                        <label for="status" class="form-label">{{ __('model.letter.status.label') }}</label>
+                        <select class="form-select" id="status" name="status">
+                            @foreach(\App\Models\Letter::STATUS_OPTIONS as $status)
+                                <option value="{{ $status }}" @selected(old('status', $data->status) === $status)>
+                                    {{ __('model.letter.status.options.' . $status) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <div class="mb-3">
                         <label
                             for="attachments"
                             class="form-label">

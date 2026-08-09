@@ -57,6 +57,7 @@ class DispositionController extends Controller
             $newDisposition['user_id'] = auth()->user()->id;
             $newDisposition['letter_id'] = $letter->id;
             Disposition::create($newDisposition);
+            $letter->update(['status' => Letter::STATUS_DISPOSISI]);
             return redirect()
                 ->route('transaction.disposition.index', $letter)
                 ->with('success', __('menu.general.success'));

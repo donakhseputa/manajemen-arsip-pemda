@@ -133,4 +133,53 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ __('dashboard.disposition_due_reminder') }}</h5>
+                </div>
+                <div class="card-body">
+                    @forelse($dueSoonDispositions as $disposition)
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <a href="{{ route('transaction.disposition.index', $disposition->letter) }}" class="fw-semibold">
+                                    {{ $disposition->letter?->reference_number }}
+                                </a>
+                                <p class="mb-0 text-muted">{{ $disposition->to }}</p>
+                            </div>
+                            <span class="badge {{ \Carbon\Carbon::parse($disposition->due_date)->lt($todayDate) ? 'bg-label-danger' : 'bg-label-warning' }}">
+                                {{ \Carbon\Carbon::parse($disposition->due_date)->isoFormat('D MMM YYYY') }}
+                            </span>
+                        </div>
+                    @empty
+                        <p class="mb-0 text-muted">{{ __('dashboard.no_due_reminder') }}</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">{{ __('dashboard.new_letter_notification') }}</h5>
+                </div>
+                <div class="card-body">
+                    @forelse($unreadLetters as $letter)
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <a href="{{ $letter->type === 'incoming' ? route('transaction.incoming.show', $letter) : route('transaction.outgoing.show', $letter) }}" class="fw-semibold">
+                                    {{ $letter->reference_number }}
+                                </a>
+                                <p class="mb-0 text-muted">{{ $letter->classification?->type }}</p>
+                            </div>
+                            <span class="badge bg-label-warning">{{ __('model.letter.read_status.unread') }}</span>
+                        </div>
+                    @empty
+                        <p class="mb-0 text-muted">{{ __('dashboard.no_new_letter_notification') }}</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
