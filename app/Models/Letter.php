@@ -17,6 +17,20 @@ class Letter extends Model
     use HasFactory,
         SoftDeletes;
 
+    public const STATUS_BELUM_DIPROSES = 'belum_diproses';
+    public const STATUS_DISPOSISI = 'disposisi';
+    public const STATUS_SUDAH_DIBALAS = 'sudah_dibalas';
+    public const STATUS_SELESAI = 'selesai';
+    public const STATUS_BATAL = 'batal';
+
+    public const STATUS_OPTIONS = [
+        self::STATUS_BELUM_DIPROSES,
+        self::STATUS_DISPOSISI,
+        self::STATUS_SUDAH_DIBALAS,
+        self::STATUS_SELESAI,
+        self::STATUS_BATAL,
+    ];
+
     /**
      * @var string[]
      */
@@ -30,6 +44,8 @@ class Letter extends Model
         'description',
         'note',
         'type',
+        'status',
+        'is_read',
         'classification_code',
         'user_id',
         'year',
@@ -42,6 +58,7 @@ class Letter extends Model
         'letter_date' => 'date',
         'received_date' => 'date',
         'year' => 'integer',
+        'is_read' => 'boolean',
     ];
 
     protected $appends = [
@@ -85,6 +102,11 @@ class Letter extends Model
     public function scopeToday($query)
     {
         return $query->whereDate('created_at', now());
+    }
+
+    public function scopeUnread($query)
+    {
+        return $query->where('is_read', false);
     }
 
     public function scopeYesterday($query)

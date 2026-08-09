@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\LetterType;
+use App\Models\Letter;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,6 +30,7 @@ class StoreLetterRequest extends FormRequest
             'letter_date' => __('model.letter.letter_date'),
             'description' => __('model.letter.description'),
             'note' => __('model.letter.note'),
+            'status' => __('model.letter.status.label'),
             'classification_code' => __('model.letter.classification_code'),
         ];
     }
@@ -50,6 +52,7 @@ class StoreLetterRequest extends FormRequest
             'letter_date' => ['required'],
             'description' => ['required'],
             'note' => ['nullable'],
+            'status' => ['required', Rule::in(Letter::STATUS_OPTIONS)],
             'classification_code' => ['required'],
         ];
     }

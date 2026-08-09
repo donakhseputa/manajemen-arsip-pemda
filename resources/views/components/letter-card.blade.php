@@ -3,6 +3,14 @@
         <div class="d-flex justify-content-between flex-column flex-sm-row">
             <div class="card-title">
                 <h5 class="text-nowrap mb-0 fw-bold">{{ $letter->reference_number }}</h5>
+                <div class="d-flex gap-2 mt-1">
+                    <span class="badge bg-label-primary">
+                        {{ __('model.letter.status.options.' . $letter->status) }}
+                    </span>
+                    <span class="badge {{ $letter->is_read ? 'bg-label-success' : 'bg-label-warning' }}">
+                        {{ $letter->is_read ? __('model.letter.read_status.read') : __('model.letter.read_status.unread') }}
+                    </span>
+                </div>
                 <small class="text-black d-block">
                 <span class="text-secondary">{{ $letter->type == 'incoming' ? 'Pengirim' : 'Penerima' }}:</span>
                 {{ $letter->type == 'incoming' ? $letter->from : $letter->to }}

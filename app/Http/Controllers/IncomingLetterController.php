@@ -252,6 +252,7 @@ class IncomingLetterController extends Controller
             $newLetter = $request->validated();
             $newLetter['user_id'] = $user->id;
             $newLetter['year'] = date('Y');
+            $newLetter['is_read'] = false;
             $sequenceNumber = Letter::query()
                 ->where('year', date('Y'))
                 ->where('type', LetterType::INCOMING->type())
@@ -295,6 +296,10 @@ class IncomingLetterController extends Controller
      */
     public function show(Letter $incoming): View
     {
+        if (!$incoming->is_read) {
+            $incoming->update(['is_read' => true]);
+        }
+
         return view('pages.transaction.incoming.show', [
             'data' => $incoming->load(['classification', 'user', 'attachments']),
         ]);

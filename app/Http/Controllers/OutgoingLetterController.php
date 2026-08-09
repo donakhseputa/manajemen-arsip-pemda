@@ -222,10 +222,20 @@ class OutgoingLetterController extends Controller
 
             $newLetter = $request->validated();
             $newLetter['user_id'] = $user->id;
-            $counter = Letter::where('year', date('Y'))->count();
-            $counter += 1;
+            $newLetter['is_read'] = false;
+            $latestSequence = Letter::withTrashed()
+                ->where('year', date('Y'))
+                ->where('type', LetterType::OUTGOING->type())
+                ->pluck('reference_number')
+                ->map(function ($referenceNumber) {
+                    $parts = explode('/', (string) $referenceNumber);
+                    $sequence = $parts[1] ?? null;
 
-            $sequenceNumber = str_pad((string)$counter, 3, '0', STR_PAD_LEFT);
+                    return is_numeric($sequence) ? (int) $sequence : 0;
+                })
+                ->max() ?? 0;
+
+            $sequenceNumber = str_pad((string) ($latestSequence + 1), 3, '0', STR_PAD_LEFT);
             $newLetter['reference_number'] = str_replace('[XXX]', $sequenceNumber, $newLetter['reference_number']);
             $newLetter['year'] = date('Y');
 
@@ -274,6 +284,10 @@ class OutgoingLetterController extends Controller
      */
     public function show(Letter $outgoing): View
     {
+        if (!$outgoing->is_read) {
+            $outgoing->update(['is_read' => true]);
+        }
+
         return view('pages.transaction.outgoing.show', [
             'data' => $outgoing->load(['classification', 'user', 'attachments']),
         ]);

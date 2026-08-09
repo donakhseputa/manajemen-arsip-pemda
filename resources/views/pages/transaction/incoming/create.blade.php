@@ -54,6 +54,18 @@
                 </div>
                 <div class="col-sm-12 col-12 col-md-6 col-lg-4">
                     <div class="mb-3">
+                        <label for="status" class="form-label">{{ __('model.letter.status.label') }}</label>
+                        <select class="form-select" id="status" name="status">
+                            @foreach(\App\Models\Letter::STATUS_OPTIONS as $status)
+                                <option value="{{ $status }}" @selected(old('status', \App\Models\Letter::STATUS_BELUM_DIPROSES) === $status)>
+                                    {{ __('model.letter.status.options.' . $status) }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-12 col-md-6 col-lg-4">
+                    <div class="mb-3">
                         <label for="attachments" class="form-label">{{ __('model.letter.attachment') }}</label>
                         <input type="file" class="form-control @error('attachments') is-invalid @enderror" id="attachments"
                                name="attachments[]" multiple/>

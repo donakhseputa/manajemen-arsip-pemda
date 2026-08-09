@@ -37,6 +37,19 @@ class PageController extends Controller
         $yesterdayOutgoingLetter = Letter::outgoing()->yesterday()->count();
         $yesterdayDispositionLetter = Disposition::yesterday()->count();
         $yesterdayLetterTransaction = $yesterdayIncomingLetter + $yesterdayOutgoingLetter + $yesterdayDispositionLetter;
+        $today = Carbon::today();
+        $dueSoonDispositions = Disposition::query()
+            ->with('letter')
+            ->whereDate('due_date', '<=', $today->copy()->addDays(3))
+            ->orderBy('due_date')
+            ->limit(5)
+            ->get();
+        $unreadLetters = Letter::query()
+            ->with('classification')
+            ->unread()
+            ->latest('created_at')
+            ->limit(5)
+            ->get();
 
         return view('pages.dashboard', [
             'greeting' => GeneralHelper::greeting(),
@@ -50,6 +63,9 @@ class PageController extends Controller
             'percentageOutgoingLetter' => GeneralHelper::calculateChangePercentage($yesterdayOutgoingLetter, $todayOutgoingLetter),
             'percentageDispositionLetter' => GeneralHelper::calculateChangePercentage($yesterdayDispositionLetter, $todayDispositionLetter),
             'percentageLetterTransaction' => GeneralHelper::calculateChangePercentage($yesterdayLetterTransaction, $todayLetterTransaction),
+            'dueSoonDispositions' => $dueSoonDispositions,
+            'unreadLetters' => $unreadLetters,
+            'todayDate' => $today,
         ]);
     }
 
