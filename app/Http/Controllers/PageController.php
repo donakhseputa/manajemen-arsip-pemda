@@ -40,6 +40,7 @@ class PageController extends Controller
         $today = Carbon::today();
         $dueSoonDispositions = Disposition::query()
             ->with('letter')
+            ->whereDate('due_date', '>=', $today->copy()->subDays(7))
             ->whereDate('due_date', '<=', $today->copy()->addDays(3))
             ->orderBy('due_date')
             ->limit(5)

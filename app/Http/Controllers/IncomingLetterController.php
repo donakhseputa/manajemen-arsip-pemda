@@ -253,7 +253,7 @@ class IncomingLetterController extends Controller
             $newLetter['user_id'] = $user->id;
             $newLetter['year'] = date('Y');
             $newLetter['is_read'] = false;
-            $sequenceNumber = Letter::query()
+            $sequenceNumber = Letter::withTrashed()
                 ->where('year', date('Y'))
                 ->where('type', LetterType::INCOMING->type())
                 ->count() + 1;

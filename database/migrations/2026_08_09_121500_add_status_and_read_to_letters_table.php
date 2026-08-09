@@ -20,7 +20,6 @@ return new class extends Migration
         });
 
         DB::table('letters')->update([
-            'status' => 'belum_diproses',
             'is_read' => true,
         ]);
     }

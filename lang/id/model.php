@@ -27,8 +27,8 @@ return [
         ],
         'read_status' => [
             'label' => 'Status Baca',
-            'read' => 'Read',
-            'unread' => 'Unread',
+            'read' => 'Dibaca',
+            'unread' => 'Belum Dibaca',
         ],
         'classification_code' => 'Kode Klasifikasi',
         'classification_level_1' => 'Klasifikasi Surat',
