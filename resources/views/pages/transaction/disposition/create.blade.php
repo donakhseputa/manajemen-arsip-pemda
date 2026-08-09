@@ -28,12 +28,22 @@
             @csrf
             <div class="card-body row">
                 <div class="col-sm-12 col-md-6">
-                    <x-input-form
-                        name="to"
-                        :label="__('model.disposition.to')"
-                        :value="old('to', '')"
-                        :required="true"
-                    />
+                    <div class="mb-3">
+                        <label for="to" class="form-label">{{ __('model.disposition.to') }} <span class="text-danger">*</span></label>
+                        <select class="form-select @error('to') is-invalid @enderror" id="to" name="to" required>
+                            <option value="" disabled {{ old('to') ? '' : 'selected' }}>
+                                -- Pilih {{ __('model.disposition.to') }} --
+                            </option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->name }}" @selected(old('to') == $user->name)>
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <span class="error invalid-feedback">
+                            {{ $errors->first('to') }}
+                        </span>
+                    </div>
                 </div>
 
                 <div class="col-sm-12 col-md-6">
