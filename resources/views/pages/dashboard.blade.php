@@ -13,7 +13,7 @@
             },
             series: [{
                 name: '{{ __('dashboard.letter_transaction') }}',
-                data: [{{ $todayIncomingLetter }},{{ $todayOutgoingLetter }},{{ $todayDispositionLetter }}]
+                data: [{{ $todayIncomingLetter }},{{ $todayOutgoingLetter }}]
             }],
             stroke: {
                 curve: 'smooth',
@@ -22,7 +22,6 @@
                 categories: [
                     '{{ __('dashboard.incoming_letter') }}',
                     '{{ __('dashboard.outgoing_letter') }}',
-                    '{{ __('dashboard.disposition_letter') }}',
                 ],
             }
         }
@@ -110,7 +109,7 @@
                         :percentage="$percentageOutgoingLetter"
                     />
                 </div>
-                <div class="col-lg-6 col-md-12 col-6 mb-4">
+                {{-- <div class="col-lg-6 col-md-12 col-6 mb-4">
                     <x-dashboard-card-simple
                         :label="__('dashboard.disposition_letter')"
                         :value="$todayDispositionLetter"
@@ -119,7 +118,7 @@
                         icon="bx-envelope"
                         :percentage="$percentageDispositionLetter"
                     />
-                </div>
+                </div> --}}
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
                     <x-dashboard-card-simple
                         :label="__('dashboard.active_user')"
@@ -134,7 +133,7 @@
         </div>
     </div>
 
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-lg-6 mb-4">
             <div class="card h-100">
                 <div class="card-header">
@@ -159,7 +158,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 mb-4">
+        <div class="col-lg-6 mb-4"> --}}
+    <div class="row">
+        <div class="col-lg-12 mb-4">
             <div class="card h-100">
                 <div class="card-header">
                     <h5 class="mb-0">{{ __('dashboard.new_letter_notification') }}</h5>
