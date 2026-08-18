@@ -57,9 +57,11 @@
                         <label for="status" class="form-label">{{ __('model.letter.status.label') }}</label>
                         <select class="form-select" id="status" name="status">
                             @foreach(\App\Models\Letter::STATUS_OPTIONS as $status)
+                                @if($status !== \App\Models\Letter::STATUS_DISPOSISI)
                                 <option value="{{ $status }}" @selected(old('status', \App\Models\Letter::STATUS_BELUM_DIPROSES) === $status)>
                                     {{ __('model.letter.status.options.' . $status) }}
                                 </option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
